@@ -4,13 +4,12 @@ import './App.css'
 function App() {
   const [movies, setMovies] = useState([]);
   const [inputValue, setInputValue] = useState('');
-  const [editId, setEditId] = useState(null); // Состояние для редактирования
+  const [editId, setEditId] = useState(null);
 
   const handleAction = () => {
     if (inputValue.trim() === '') return;
 
     if (editId) {
-      // Обновляем через .map (создаем новый массив)
       setMovies(movies.map(m => m.id === editId ? { ...m, name: inputValue } : m));
       setEditId(null);
     } else {
@@ -20,7 +19,7 @@ function App() {
   };
 
   const startEdit = (movie) => {
-    setInputValue(movie.name); // Данные улетают в инпут
+    setInputValue(movie.name);
     setEditId(movie.id);
   };
 
@@ -33,7 +32,7 @@ function App() {
             value={inputValue} 
             onChange={(e) => setInputValue(e.target.value)} 
           />
-          {/* Кнопка меняется на Edit */}
+          {}
           <button onClick={handleAction}>{editId ? 'Edit' : 'Add'}</button>
         </div>
         <h3>To watch list:</h3>

@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import './App.css'
+import LikeDislike from './LikeDislike'
 
 function App() {
   const [movies, setMovies] = useState([])
   const [inputValue, setInputValue] = useState('')
   const [editId, setEditId] = useState(null)
+  const [showWatched, setShowWatched] = useState(false)
 
+  // Добавление или редактирование фильма
   const handleAction = () => {
     if (inputValue.trim() === '') return
 
@@ -42,6 +45,16 @@ function App() {
     ))
   }
 
+  const setReaction = (id, value) => {
+    setMovies(movies.map(movie =>
+      movie.id === id ? { ...movie, reaction: value } : movie
+    ))
+  }
+
+  const filteredMovies = movies.filter(movie =>
+    showWatched ? movie.watched : !movie.watched
+  )
+
   return (
     <div className="container">
       <div className="browser-mockup">
@@ -53,12 +66,21 @@ function App() {
             onChange={(e) => setInputValue(e.target.value)}
           />
           <button onClick={handleAction}>
-            {editId ? 'Edit' : 'Add'}
+            {editId ? 'Редактировать' : 'Добавить'}
           </button>
         </div>
 
+        <button
+          onClick={() => setShowWatched(!showWatched)}
+          style={{ marginBottom: '15px' }}
+        >
+          {showWatched
+            ? 'Показать ещё не просмотренные'
+            : 'Показать просмотренные'}
+        </button>
+
         <ul className="movie-list">
-          {movies.map(movie => (
+          {filteredMovies.map(movie => (
             <li key={movie.id} className="movie-item">
               <span>
                 {movie.name}
@@ -67,14 +89,22 @@ function App() {
 
               <div className="btn-group">
                 <button onClick={() => toggleWatched(movie.id)}>
-                  {movie.watched ? 'Unwatch' : 'Watched'}
+                  {movie.watched ? 'Не просмотрено' : 'Просмотрено'}
                 </button>
 
-                <button onClick={() => startEdit(movie)}>Edit</button>
+                {movie.watched && (
+                  <LikeDislike
+                    reaction={movie.reaction}
+                    onLike={() => setReaction(movie.id, 'like')}
+                    onDislike={() => setReaction(movie.id, 'dislike')}
+                  />
+                )}
+
+                <button onClick={() => startEdit(movie)}>Редактировать</button>
                 <button onClick={() =>
                   setMovies(movies.filter(m => m.id !== movie.id))
                 }>
-                  ✖
+                  Удалить
                 </button>
               </div>
             </li>

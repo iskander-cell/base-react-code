@@ -7,8 +7,7 @@ function App() {
   const [inputValue, setInputValue] = useState('')
   const [editId, setEditId] = useState(null)
   const [showWatched, setShowWatched] = useState(false)
-
-  // Добавление или редактирование фильма
+   
   const handleAction = () => {
     if (inputValue.trim() === '') return
 
